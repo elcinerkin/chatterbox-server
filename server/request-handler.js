@@ -12,6 +12,11 @@ var handleRequest = function(request, response) {
   /* Documentation for both request and response can be found at
    * http://nodemanual.org/0.8.14/nodejs_ref_guide/http.html */
 
+  // if(request.url === "/1/classes/messages") {
+
+  // }
+
+
   console.log("Serving request type " + request.method + " for url " + request.url);
 
   var statusCode = 200;
@@ -20,7 +25,7 @@ var handleRequest = function(request, response) {
    * below about CORS. */
   var headers = defaultCorsHeaders;
 
-  headers['Content-Type'] = "text/plain";
+  headers['Content-Type'] = "application/json";
 
   /* .writeHead() tells our server what HTTP status code to send back */
   response.writeHead(statusCode, headers);
@@ -29,8 +34,16 @@ var handleRequest = function(request, response) {
    * anything back to the client until you do. The string you pass to
    * response.end() will be the body of the response - i.e. what shows
    * up in the browser.*/
-  response.end("Hello, World!");
+   var message = {
+    "username" : "roberto",
+    "text" : "Hi there!",
+    "createdAt" : new Date(),
+    "roomname" : "lobby"};
+
+  response.end(JSON.stringify(message));
 };
+
+exports.handleRequest = handleRequest;
 
 /* These headers will allow Cross-Origin Resource Sharing (CORS).
  * This CRUCIAL code allows this server to talk to websites that

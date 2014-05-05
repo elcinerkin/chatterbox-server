@@ -1,7 +1,8 @@
 app = {
-    server: 'https://api.parse.com/1/classes/chatterbox/',
+    server: 'http://127.0.0.1:3000',
     username: 'anonymous',
     lastMessageId: 0,
+
 
     init: function() {
       console.log('running chatterbox');
@@ -57,12 +58,13 @@ app = {
 
     loadMsgs: function(){
       $.ajax({
+        type: 'GET',
         url: app.server,
-        data: { order: '-createdAt'},
+        //data: {},
         contentType: 'application/json',
         success: function(json){
-          //console.log(json.results);
-          app.processNewMessages(json.results);
+          console.log(json);
+          app.processNewMessages([json]);
         },
         complete: function(){
           app.stopSpinner();
