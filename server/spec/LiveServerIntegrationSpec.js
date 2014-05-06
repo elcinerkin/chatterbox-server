@@ -12,6 +12,7 @@ describe('Live Node Chat Server', function() {
 
   it('Should send back parsable stringified JSON', function(done) {
     request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
+      //console.log("inside test, body********", response.body)
       expect(JSON.parse.bind(this, body)).to.not.throw();
       done();
     });
@@ -20,6 +21,9 @@ describe('Live Node Chat Server', function() {
   it('Should send back an object', function(done) {
     request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
       parsedBody = JSON.parse(body);
+      console.log("parsed body in test", parsedBody);
+      console.log(typeof parsedBody)
+      console.log(typeof parsedBody.results[0])
       expect(parsedBody).to.be.an('object');
       done();
     });

@@ -4,6 +4,7 @@
  * You'll have to figure out a way to export this function from
  * this file and include it in basic-server.js so that it actually works.
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
+var storage = {results:[]};
 
 var handleRequest = function(request, response) {
   /* the 'request' argument comes from nodes http module. It includes info about the
@@ -12,35 +13,48 @@ var handleRequest = function(request, response) {
   /* Documentation for both request and response can be found at
    * http://nodemanual.org/0.8.14/nodejs_ref_guide/http.html */
 
-  // if(request.url === "/1/classes/messages") {
-
-  // }
-
-
   console.log("Serving request type " + request.method + " for url " + request.url);
-
-  var statusCode = 200;
+  //TODO - elaborate status codes
+  //var statusCode = 200;
 
   /* Without this line, this server wouldn't work. See the note
    * below about CORS. */
   var headers = defaultCorsHeaders;
-
   headers['Content-Type'] = "application/json";
 
   /* .writeHead() tells our server what HTTP status code to send back */
-  response.writeHead(statusCode, headers);
 
+  if(request.url === "/classes/messages") {
+    if(request.method === 'GET') {
+      // var message = { results: [{"username" : "roberto","text" : "Hi there!", "createdAt" : new Date(),"roomname" : "lobby"}]};
+      console.log("inside room1");
+      response.writeHead(200, headers);
+      response.write(JSON.stringify(storage));
+      response.end();
+    }
+    else if (request.method === "POST") {
+      var data = '';
+      request.on('data', function(chunk){
+        data += chunk;
+      });
+
+      request.on('end', function(){
+        var toData = JSON.parse(data);
+        storage['results'].push(toData);
+      });
+
+      response.writeHead(201, headers);
+      //response.write(JSON.stringify(toData));
+    }
+  }
+  else {
+    response.writeHead(404, headers);
+  }
   /* Make sure to always call response.end() - Node will not send
    * anything back to the client until you do. The string you pass to
    * response.end() will be the body of the response - i.e. what shows
    * up in the browser.*/
-   var message = {
-    "username" : "roberto",
-    "text" : "Hi there!",
-    "createdAt" : new Date(),
-    "roomname" : "lobby"};
-
-  response.end(JSON.stringify(message));
+  response.end();
 };
 
 exports.handleRequest = handleRequest;

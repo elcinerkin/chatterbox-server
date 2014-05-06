@@ -1,5 +1,5 @@
 app = {
-    server: 'http://127.0.0.1:3000',
+    server: 'http://127.0.0.1:3000/classes/messages',
     username: 'anonymous',
     lastMessageId: 0,
 
@@ -48,8 +48,9 @@ app = {
 
     processNewMessages: function(messages){
       // messages arrive newest first
+      console.log(messages)
       for( var i = messages.length; i > 0; i-- ){
-        var message = messages[i-1];
+        var message = (messages[i-1]);
         // check if objectId is in dom.
         if( $('#chats').find('.message[data-id='+message.objectId+']').length ){ continue; }
         $('#chats').prepend(app.renderMessage(message));
@@ -64,7 +65,7 @@ app = {
         contentType: 'application/json',
         success: function(json){
           console.log(json);
-          app.processNewMessages([json]);
+          app.processNewMessages(json.results);
         },
         complete: function(){
           app.stopSpinner();
